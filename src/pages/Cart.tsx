@@ -104,6 +104,7 @@ export default function Cart(): React.ReactElement {
           <h2 className="ct-title">Your Cart</h2>
         </div>
 
+
         <div className="ct-header-right">
           <button className="ct-btn-ghost" onClick={() => (window.location.href = "/")}>
             Continue Shopping
