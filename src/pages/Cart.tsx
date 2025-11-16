@@ -100,6 +100,7 @@ export default function Cart(): React.ReactElement {
         }}>
           <button className="ct-btn-ghost" onClick={goBack}>
             ← Back
+            
           </button>
           <h2 className="ct-title">Your Cart</h2>
         </div>
