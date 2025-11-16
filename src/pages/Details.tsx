@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+// File: src/components/Details.tsx
+import  { useEffect, useState } from "react";
 import { getProductDetails } from "../api/products";
-
+import '../details.css'
 export interface Rating {
   rate: number;
   count: number;
@@ -16,7 +17,6 @@ export interface Product {
   rating: Rating;
 }
 
- 
 interface CartItem {
   id: number;
   title: string;
@@ -29,17 +29,15 @@ export default function Details() {
   const params = new URLSearchParams(window.location.search);
   const idParam = params.get("id");
 
-  const [detail, setDetail] = useState <Product | null>(null);
-  const [loading, setLoading] = useState <boolean>(true);
-  const [error, setError] = useState <string | null>(null);
+  const [detail, setDetail] = useState<Product | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-   
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
-  const [cartQty, setCartQty] = useState<number>(0); 
-  const [selectedQty, setSelectedQty] = useState<number>(1);  
+  const [cartQty, setCartQty] = useState<number>(0);
+  const [selectedQty, setSelectedQty] = useState<number>(1);
   const [descExpanded, setDescExpanded] = useState<boolean>(false);
 
- 
   const readCart = (): CartItem[] => {
     try {
       const raw = sessionStorage.getItem("cart");
@@ -51,13 +49,11 @@ export default function Details() {
     }
   };
 
-   
   const writeCart = (cart: CartItem[]) => {
     sessionStorage.setItem("cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("cart-updated"));
   };
 
-   
   const hydrateCartState = (id: number) => {
     const cart = readCart();
     const item = cart.find((c) => c.id === id);
@@ -106,7 +102,6 @@ export default function Details() {
     else (window.location.href = "/");
   };
 
-  
   const addToCart = () => {
     if (!detail) return;
     const cart = readCart();
@@ -127,7 +122,6 @@ export default function Details() {
     setCartQty((prev) => prev + Number(selectedQty || 1));
   };
 
- 
   const removeFromCart = () => {
     if (!detail) return;
     let cart = readCart();
@@ -137,7 +131,6 @@ export default function Details() {
     setCartQty(0);
   };
 
- 
   const decrementCartQty = () => {
     if (!detail) return;
     const cart = readCart();
@@ -154,7 +147,7 @@ export default function Details() {
       writeCart(cart);
     }
   };
- 
+
   const incrementCartQty = () => {
     if (!detail) return;
     const cart = readCart();
@@ -164,7 +157,6 @@ export default function Details() {
       setCartQty(cart[idx].qty);
       writeCart(cart);
     } else {
-       
       cart.push({ id: detail.id, title: detail.title, price: detail.price, qty: 1, image: detail.image });
       setAddedToCart(true);
       setCartQty(1);
@@ -172,121 +164,27 @@ export default function Details() {
     }
   };
 
-   
   const formatPrice = (p: number) => {
-     
     return p % 1 === 0 ? p.toString() : p.toFixed(2);
   };
 
- 
-  const container: React.CSSProperties = {
-    maxWidth: 1024,
-    margin: "18px auto",
-    padding: 16,
-    boxSizing: "border-box",
-  };
-
-  const card: React.CSSProperties = {
-    display: "flex",
-    gap: 20,
-    background: "#fff",
-    padding: 18,
-    borderRadius: 10,
-    boxShadow: "0 6px 18px rgba(15,23,42,0.06)",
-    alignItems: "flex-start",
-  };
-
-  const imgWrap: React.CSSProperties = {
-    minWidth: 340,
-    maxWidth: 420,
-    height: 420,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#fafafa",
-    borderRadius: 8,
-    padding: 12,
-  };
-
-  const imgStyle: React.CSSProperties = {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
-  };
-
-  const metaRow: React.CSSProperties = { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginTop: 6 };
-
-  const badgeStyle: React.CSSProperties = {
-    padding: "6px 10px",
-    borderRadius: 999,
-    background: "#111827",
-    color: "#fff",
-    fontWeight: 700,
-    fontSize: 13,
-  };
-
-  const ratingStyle: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, color: "#374151" };
-
-  const priceStyle: React.CSSProperties = { fontSize: 24, fontWeight: 900, color: "#059669" };
-
-  const descStyle: React.CSSProperties = { color: "#374151", lineHeight: 1.6, fontSize: 15 };
-
-  const actions: React.CSSProperties = { display: "flex", gap: 12, marginTop: 12, alignItems: "center" };
-
-  const btnPrimary: React.CSSProperties = {
-    padding: "10px 14px",
-    background: "#0f172a",
-    color: "#fff",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-    fontWeight: 800,
-  };
-
-  const btnDanger: React.CSSProperties = {
-    padding: "10px 14px",
-    background: "#b91c1c",
-    color: "#fff",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-    fontWeight: 800,
-  };
-
-  const btnGhost: React.CSSProperties = {
-    padding: "8px 12px",
-    background: "transparent",
-    border: "1px solid #e5e7eb",
-    borderRadius: 8,
-    cursor: "pointer",
-  };
-
-  const qtyBox: React.CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 8,
-    border: "1px solid #e5e7eb",
-    padding: "6px 8px",
-    borderRadius: 8,
-  };
-
   // Render states
-  if (loading) return <div style={container}>Loading...</div>;
-  if (error) return <div style={container}>{error}</div>;
-  if (!detail) return <div style={container}>Not found.</div>;
+  if (loading) return <div className="dv-container">Loading...</div>;
+  if (error) return <div className="dv-container">{error}</div>;
+  if (!detail) return <div className="dv-container">Not found.</div>;
 
   const totalPrice = detail.price * (addedToCart ? cartQty : selectedQty);
 
   return (
-    <div style={container}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <button style={btnGhost} onClick={goBack}>
+    <div className="dv-container">
+      <div className="dv-header">
+        <button className="dv-btn-ghost" onClick={goBack}>
           ← Back
         </button>
 
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="dv-actions-inline">
           <button
-            style={btnGhost}
+            className="dv-btn-ghost"
             onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(detail.title)}`, "_blank")}
           >
             Search
@@ -294,115 +192,95 @@ export default function Details() {
         </div>
       </div>
 
-      <div style={card}>
-        <div style={imgWrap}>
-          <img src={detail.image} alt={detail.title} style={imgStyle} />
+      <div className="dv-card">
+        <div className="dv-img-wrap">
+          <img src={detail.image} alt={detail.title} className="dv-img" />
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="dv-content">
           <div>
-            <h1 style={{ margin: 0, fontSize: 22 }}>{detail.title}</h1>
+            <h1 className="dv-title">{detail.title}</h1>
 
-            <div style={metaRow}>
-              <div style={badgeStyle}>{detail.category}</div>
+            <div className="dv-meta-row">
+              <div className="dv-badge">{detail.category}</div>
 
-              <div style={ratingStyle} title={`Rating ${detail.rating.rate} (${detail.rating.count})`}>
-                <span style={{ color: "#f59e0b", fontSize: 16 }}>★</span>
-                <span style={{ fontWeight: 800 }}>{detail.rating.rate}</span>
-                <span style={{ color: "#9ca3af", fontSize: 13 }}>({detail.rating.count})</span>
+              <div className="dv-rating" title={`Rating ${detail.rating.rate} (${detail.rating.count})`}>
+                <span className="dv-star">★</span>
+                <span className="dv-rating-value">{detail.rating.rate}</span>
+                <span className="dv-rating-count">({detail.rating.count})</span>
               </div>
             </div>
 
-            <div style={{ marginTop: 8 }}>
-              <div style={priceStyle}>₹ {formatPrice(detail.price)}</div>
-            </div>
+            <div className="dv-price">₹ {formatPrice(detail.price)}</div>
           </div>
 
           <div>
-            <div style={descStyle}>
+            <div className="dv-desc">
               {descExpanded ? detail.description : detail.description.slice(0, 220) + (detail.description.length > 220 ? "..." : "")}
             </div>
             {detail.description.length > 220 && (
-              <button
-                onClick={() => setDescExpanded((s) => !s)}
-                style={{ marginTop: 8, ...btnGhost, fontSize: 13 }}
-                aria-expanded={descExpanded}
-              >
+              <button onClick={() => setDescExpanded((s) => !s)} className="dv-btn-ghost dv-readmore" aria-expanded={descExpanded}>
                 {descExpanded ? "Show less" : "Read more"}
               </button>
             )}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>Quantity</div>
-                {!addedToCart ? (
-                  <div style={qtyBox}>
-                    <button
-                      style={{ border: "none", background: "transparent", cursor: "pointer", fontWeight: 800 }}
-                      onClick={() => setSelectedQty((q) => Math.max(1, q - 1))}
-                      aria-label="Decrease quantity"
-                    >
-                      −
-                    </button>
-                    <div style={{ minWidth: 28, textAlign: "center", fontWeight: 800 }}>{selectedQty}</div>
-                    <button
-                      style={{ border: "none", background: "transparent", cursor: "pointer", fontWeight: 800 }}
-                      onClick={() => setSelectedQty((q) => q + 1)}
-                      aria-label="Increase quantity"
-                    >
-                      +
-                    </button>
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <button onClick={decrementCartQty} style={btnGhost} aria-label="Decrease in cart">
-                      −
-                    </button>
-                    <div style={{ minWidth: 36, textAlign: "center", fontWeight: 800 }}>{cartQty}</div>
-                    <button onClick={incrementCartQty} style={btnGhost} aria-label="Increase in cart">
-                      +
-                    </button>
-                  </div>
-                )}
-              </div>
+          <div className="dv-qty-row">
+            <div className="dv-qty-left">
+              <div className="dv-qty-label">Quantity</div>
+              {!addedToCart ? (
+                <div className="dv-qty-box">
+                  <button className="dv-qty-btn" onClick={() => setSelectedQty((q) => Math.max(1, q - 1))} aria-label="Decrease quantity">
+                    −
+                  </button>
+                  <div className="dv-qty-value">{selectedQty}</div>
+                  <button className="dv-qty-btn" onClick={() => setSelectedQty((q) => q + 1)} aria-label="Increase quantity">
+                    +
+                  </button>
+                </div>
+              ) : (
+                <div className="dv-incart-controls">
+                  <button className="dv-btn-ghost" onClick={decrementCartQty} aria-label="Decrease in cart">
+                    −
+                  </button>
+                  <div className="dv-cart-qty">{cartQty}</div>
+                  <button className="dv-btn-ghost" onClick={incrementCartQty} aria-label="Increase in cart">
+                    +
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 13, color: "#6b7280" }}>Total</div>
-              <div style={{ fontSize: 20, fontWeight: 900, color: "#059669" }}>₹ {formatPrice(totalPrice)}</div>
+            <div className="dv-total">
+              <div className="dv-total-label">Total</div>
+              <div className="dv-total-price">₹ {formatPrice(totalPrice)}</div>
             </div>
           </div>
 
-          <div style={actions}>
+          <div className="dv-action-row">
             {!addedToCart ? (
-              <button style={btnPrimary} onClick={addToCart} aria-label="Add to cart">
+              <button className="dv-btn-primary" onClick={addToCart} aria-label="Add to cart">
                 Add to Cart
               </button>
             ) : (
               <>
-                <button style={{ ...btnPrimary, opacity: 0.9 }} disabled>
+                <button className="dv-btn-primary dv-btn-disabled" disabled>
                   Added ✓
                 </button>
-                <button style={btnDanger} onClick={removeFromCart} aria-label="Remove from cart">
+                <button className="dv-btn-danger" onClick={removeFromCart} aria-label="Remove from cart">
                   Remove
                 </button>
               </>
             )}
 
-            <button
-              style={btnGhost}
-              onClick={() => {
-                // go to cart page
-                window.location.href = "/cart";
-              }}
-            >
-              View Cart
-            </button>
+            <button className="dv-btn-ghost" onClick={() => (window.location.href = "/cart")}>View Cart</button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+/*
+  File: src/components/Details.css
+*/
