@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import '../cart.css'
 
 type CartItem = {
   id: number;
@@ -11,10 +12,8 @@ type CartItem = {
 const readCart = (): CartItem[] => {
   try {
     const raw = sessionStorage.getItem("cart");
-
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-
     if (!Array.isArray(parsed)) return [];
     return parsed as CartItem[];
   } catch {
@@ -32,7 +31,6 @@ const writeCartToStorage = (cart: CartItem[]) => {
 };
 
 export default function Cart(): React.ReactElement {
-
   const [cart, setCart] = useState<CartItem[]>(() => readCart());
 
   const loadCart = useCallback(() => {
@@ -41,7 +39,6 @@ export default function Cart(): React.ReactElement {
   }, []);
 
   useEffect(() => {
-
     const onCartUpdated = () => loadCart();
     const onStorage = (e: StorageEvent) => {
       if (e.key === "cart") loadCart();
@@ -91,160 +88,89 @@ export default function Cart(): React.ReactElement {
     else (window.location.href = "/");
   };
 
-
-  // style....
-
-  const container: React.CSSProperties =
-  {
-    maxWidth: 1024,
-    margin: "20px auto",
-    padding: 16, boxSizing: "border-box"
-  };
-
-
-  const card: React.CSSProperties =
-  {
-    background: "#fff",
-    padding: 14,
-    borderRadius: 10,
-    boxShadow: "0 6px 18px rgba(2,6,23,0.04)"
-  };
-
-
-  const itemRow: React.CSSProperties =
-  {
-    display: "flex",
-    gap: 12,
-    alignItems: "center",
-    padding: "12px 0",
-    borderBottom: "1px solid #f3f4f6"
-  };
-
-  const imgStyle: React.CSSProperties =
-  {
-    width: 88,
-    height: 88,
-    objectFit: "contain",
-    background: "#fafafa",
-    borderRadius: 8,
-    padding: 8
-  };
-
-  const titleStyle: React.CSSProperties =
-  {
-    fontSize: 15,
-    fontWeight: 700,
-    color: "#0f172a"
-  };
-
-
-  const priceStyle: React.CSSProperties =
-  {
-    fontWeight: 800,
-    color: "#059669"
-  };
-
-  const qtyBox: React.CSSProperties =
-  {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 8,
-    border: "1px solid #e5e7eb",
-    padding: "6px 8px",
-    borderRadius: 8
-  };
-
-  const btnPrimary: React.CSSProperties =
-  {
-    padding: "10px 14px",
-    background: "#0f172a",
-    color: "#fff",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-    fontWeight: 800
-  };
-
-
-  const btnGhost: React.CSSProperties =
-  {
-    padding: "8px 12px",
-    background: "transparent",
-    border: "1px solid #e5e7eb",
-    borderRadius: 8,
-    cursor: "pointer"
-  };
-
-  const btnDanger: React.CSSProperties =
-  {
-    padding: "8px 12px",
-    background: "#ef4444",
-    color: "#fff",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer"
-  };
-
   return (
-    <div style={container}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button style={btnGhost} onClick={goBack}>← Back</button>
-          <h2 style={{ margin: 0 }}>Your Cart</h2>
+    <div className="ct-container">
+      <div className="ct-header">
+        <div className="ct-header-left">
+          <button className="ct-btn-ghost" onClick={goBack}>
+            ← Back
+          </button>
+          <h2 className="ct-title">Your Cart</h2>
         </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <button style={btnGhost} onClick={() => (window.location.href = "/")}>Continue Shopping</button>
-          <button style={btnDanger} onClick={clearCart} disabled={cart.length === 0}>Clear Cart</button>
+        <div className="ct-header-right">
+          <button className="ct-btn-ghost" onClick={() => (window.location.href = "/")}>
+            Continue Shopping
+          </button>
+          <button className="ct-btn-danger" onClick={clearCart} disabled={cart.length === 0}>
+            Clear Cart
+          </button>
         </div>
       </div>
 
-      <div style={card}>
+      <div className="ct-card">
         {cart.length === 0 ? (
-          <div style={{ padding: 28, textAlign: "center", color: "#6b7280" }}>
-            Your cart is empty.
-          </div>
+          <div className="ct-empty">Your cart is empty.</div>
         ) : (
           <>
-            {cart.map((item) => (
-              <div key={item.id} style={itemRow}>
-                <img src={item.image} alt={item.title} style={imgStyle} />
-
-                <div style={{ flex: 1 }}>
-                  <div style={titleStyle}>{item.title}</div>
-                  <div style={{ marginTop: 8, display: "flex", gap: 12, alignItems: "center" }}>
-                    <div style={priceStyle}>₹ {item.price}</div>
-                    <div style={{ color: "#6b7280", fontSize: 13 }}>Subtotal: ₹ {(item.price * item.qty).toFixed(2)}</div>
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
-                  <div style={qtyBox}>
-                    <button style={btnGhost} onClick={() => decrement(item.id)} aria-label="Decrease">−</button>
-                    <div style={{ minWidth: 28, textAlign: "center", fontWeight: 800 }}>{item.qty}</div>
-                    <button style={btnGhost} onClick={() => increment(item.id)} aria-label="Increase">+</button>
+            <div className="ct-items">
+              {cart.map((item) => (
+                <div key={item.id} className="ct-item-row">
+                  <div className="ct-item-media">
+                    <img src={item.image} alt={item.title} className="ct-img" />
                   </div>
 
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button style={btnGhost} onClick={() => (window.location.href = `/productdetails?id=${encodeURIComponent(String(item.id))}`)}>View</button>
-                    <button style={btnDanger} onClick={() => removeItem(item.id)}>Remove</button>
+                  <div className="ct-item-main">
+                    <div className="ct-item-title">{item.title}</div>
+                    <div className="ct-item-meta">
+                      <div className="ct-price">₹ {item.price}</div>
+                      <div className="ct-sub">Subtotal: ₹ {(item.price * item.qty).toFixed(2)}</div>
+                    </div>
+                  </div>
+
+                  <div className="ct-item-controls">
+                    <div className="ct-qty-box">
+                      <button className="ct-btn-ghost" onClick={() => decrement(item.id)} aria-label="Decrease">
+                        −
+                      </button>
+                      <div className="ct-qty-value">{item.qty}</div>
+                      <button className="ct-btn-ghost" onClick={() => increment(item.id)} aria-label="Increase">
+                        +
+                      </button>
+                    </div>
+
+                    <div className="ct-row-actions">
+                      <button
+                        className="ct-btn-ghost"
+                        onClick={() => (window.location.href = `/productdetails?id=${encodeURIComponent(String(item.id))}`)}
+                      >
+                        View
+                      </button>
+                      <button className="ct-btn-danger-compact" onClick={() => removeItem(item.id)}>
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
+            <div className="ct-summary">
+              <div className="ct-items-count">{cart.length} item(s)</div>
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
-              <div style={{ color: "#6b7280" }}>{cart.length} item(s)</div>
-              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 13, color: "#6b7280" }}>Total</div>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: "#059669" }}>₹ {getTotal().toFixed(2)}</div>
+              <div className="ct-summary-right">
+                <div className="ct-total">
+                  <div className="ct-total-label">Total</div>
+                  <div className="ct-total-price">₹ {getTotal().toFixed(2)}</div>
                 </div>
 
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button style={btnGhost} onClick={() => (window.location.href = "/")}>Continue Shopping</button>
-                  <button style={btnPrimary} onClick={() => alert("Checkout not implemented in this assignment.")}>Checkout</button>
+                <div className="ct-summary-actions">
+                  <button className="ct-btn-ghost" onClick={() => (window.location.href = "/")}>
+                    Continue Shopping
+                  </button>
+                  <button className="ct-btn-primary" onClick={() => alert("Checkout not implemented in this assignment.")}>
+                    Checkout
+                  </button>
                 </div>
               </div>
             </div>
