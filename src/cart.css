@@ -15,6 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 12px;
   gap: 12px;
 }
@@ -198,6 +199,9 @@
     grid-template-columns: 88px 1fr 140px;
     gap: 10px;
     align-items: start;
+  }
+  .ct-header-left button{
+    width: 100%;
   }
 
   .ct-item-title { white-space: normal; } /* allow wrap */

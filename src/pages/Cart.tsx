@@ -90,8 +90,14 @@ export default function Cart(): React.ReactElement {
 
   return (
     <div className="ct-container">
-      <div className="ct-header">
-        <div className="ct-header-left">
+      <div className="ct-header "style={{
+        display:"flex",
+        flexWrap:"wrap"
+      }}>
+        <div className="ct-header-left" style={{
+          display:"flex",
+          flexWrap:"wrap"
+        }}>
           <button className="ct-btn-ghost" onClick={goBack}>
             ← Back
           </button>
